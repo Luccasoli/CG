@@ -6,13 +6,14 @@
 #define LARGURA 600 /* Width */
 #define ALTURA 600  /* Heigth */
 
-double rotationX = 20.0;
-double rotationY = 20.0;
+double rotationX = 0.0;
+double rotationY = 0.0;
 
 int last_press_x = 0;
 int last_press_y = 0;
 
 double rot = 0.0;
+float distanciaEntreBastoes = 10.8;
 
 void Desenha_Origem()
 {
@@ -71,16 +72,44 @@ void Desenha_Eixos_Coordenados()
     glEnd();
 }
 
-void Desenha_Bastoes() {
+void Desenha_Bastao()
+{
     GLUquadricObj *quadratic;
     quadratic = gluNewQuadric();
     glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
     gluCylinder(quadratic, 0.3f, 0.3f, 10.0f, 32, 32);
 }
 
+void Desenha_disco(int tamanho)
+{
+    float raio = 0.9;
+    switch (tamanho)
+    {
+    case 5:
+        raio = 5 * raio;
+        break;
+    case 4:
+        raio = 4 * raio;
+        break;
+    case 3:
+        raio = 3 * raio;
+        break;
+    case 2:
+        raio = 2 * raio;
+        break;
+    case 1:
+        raio = raio;
+        break;
+    }
+    glRotated(90, 1.0, 0.0, 0.0);
+    glTranslatef(-distanciaEntreBastoes, 0.0, 0.0);
+    glutSolidTorus(0.9, raio, 20, 20);
+}
+
 /* Função callback chamada para fazer o desenho */
 void Desenha(void)
 {
+    float distanciaEntreDiscos = 1.8;
     /* Limpa a janela de visualização com a cor de fundo especificada */
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -91,9 +120,9 @@ void Desenha(void)
      * olhar = (0, 0, 0)
      * up = (0, 1, 0) */
     glLoadIdentity();
-    gluLookAt(0.0, -7.0, 40.0, /* eye */
-              0.0, 0.0, 0.0,  /* look */
-              0.0, 1.0, 0.0); /* up */
+    gluLookAt(0.0, 10.0, 40.0, /* eye */
+              0.0, 0.0, 0.0,   /* look */
+              0.0, 1.0, 0.0);  /* up */
 
     /* Rotaciona os objetos para visualizar a 3 dimensão */
     glRotatef(rotationY, 1.0, 0.0, 0.0); /* Rotaciona em torno do X */
@@ -105,28 +134,82 @@ void Desenha(void)
     glRotated(rot, 0.0, 1.0, 0.0);
 
     glColor3f(0.0, 0.0, 0.0);
-    // glutWireCube(6);
-    //glutSolidCube(4);
-    //glutWireSphere(4, 50, 50);
-    //glutSolidSphere(4, 50, 50);
-    // glutWireCone(4.0, 8.0, 20, 20);
+
     // glutWireTeapot(4);
-    //glutWireTorus(1, 4, 20, 20);
+
+    // Disco 5
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT); // Empilha a última cor
+    glColor3f(0.0, 0.0, 0.6);
+    glTranslatef(0.0, distanciaEntreDiscos * 0, 0.0);
+    Desenha_disco(5);
+    glPopAttrib(); // Desempilha a última cor
+    glPopMatrix();
+
+    // Disco 5 TESTE
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT); // Empilha a última cor
+    glColor3f(0.0, 0.0, 0.6);
+    glTranslatef(distanciaEntreBastoes, distanciaEntreDiscos * 0, 0.0);
+    Desenha_disco(5);
+    glPopAttrib(); // Desempilha a última cor
+    glPopMatrix();
+
+    // Disco 4
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT); // Empilha a última cor
+    glColor3f(0.0, 0.0, 0.6);
+    glTranslatef(0.0, distanciaEntreDiscos * 1, 0.0);
+    Desenha_disco(4);
+    glPopAttrib(); // Desempilha a última cor
+    glPopMatrix();
+
+    // Disco 3
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT); // Empilha a última cor
+    glColor3f(0.0, 0.0, 0.6);
+    glTranslatef(0.0, distanciaEntreDiscos * 2, 0.0);
+    Desenha_disco(3);
+    glPopAttrib(); // Desempilha a última cor
+    glPopMatrix();
+
+    // Disco 2
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT); // Empilha a última cor
+    glColor3f(0.0, 0.0, 0.6);
+    glTranslatef(0.0, distanciaEntreDiscos * 3, 0.0);
+    Desenha_disco(2);
+    glPopAttrib(); // Desempilha a última cor
+    glPopMatrix();
+
+    // Disco 1
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT); // Empilha a última cor
+    glColor3f(0.0, 0.0, 0.6);
+    glTranslatef(0.0, distanciaEntreDiscos * 4, 0.0);
+    Desenha_disco(1);
+    glPopAttrib(); // Desempilha a última cor
+    glPopMatrix();
 
     // Bastão central
-	glPushMatrix();
-    Desenha_Bastoes();
+    glPushMatrix();
+    glColor3f(0.45f, 0.30f, 0.04f); // Marrom
+    Desenha_Bastao();
+    glPopMatrix();
 
     // Bastão da direita
+    glPushMatrix();
+    glColor3f(0.45f, 0.30f, 0.04f); // Marrom
+    glTranslatef(distanciaEntreBastoes, 0.0, 0.0);
+    Desenha_Bastao();
     glPopMatrix();
-	glPushMatrix();
-	glTranslatef(8, 0.0, 0.0);
-    Desenha_Bastoes();
 
     // Bastão da esquerda
+    glPushMatrix();
+    glColor3f(0.45f, 0.30f, 0.04f); // Marrom
+    glTranslatef(-distanciaEntreBastoes, 0.0, 0.0);
+    Desenha_Bastao();
     glPopMatrix();
-	glTranslatef(-8, 0.0, 0.0);
-    Desenha_Bastoes();
 
     /* Executa os comandos OpenGL */
     //glFlush();
